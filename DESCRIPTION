@@ -1,0 +1,10 @@
+Package: solarEuR
+Type: Package
+Title: Interpolation and time serie analysis of solar radation in Europe
+Version: 1.0
+Date: 2017-06-15
+Author: person("Marieke","Dirksen",email="marieke.dirksen@knmi.nl",role=c("aut","cre"))
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: The package uses both satellite data and ground based observations
+License: What license is it under?
+RoxygenNote: 6.0.1

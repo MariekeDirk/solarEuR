@@ -1,0 +1,162 @@
+---
+title: "Documentation"
+author: "Marieke Dirksen"
+date: "May 30, 2017"
+output: html_document
+---
+## Introduction
+
+* description of project
+* goals
+
+```{r,echo=FALSE,message=FALSE}
+.libPaths("/nobackup/users/dirksen/R/x86_64-redhat-linux-gnu-library/3.3/")
+library(R.utils)
+library(raster)
+library(ncdf4)
+library(rts)
+library(rgdal)
+#source("../functions/generate_raster_based_on_netcdf.R")
+sourceDirectory("R")
+pro <- CRS("+init=epsg:28992")
+WGS84<-CRS("+init=epsg:4326")
+
+mymap.unpro=readOGR(dsn='../data/NaturalEarthData/ne_10m_admin_0_countries',layer="ne_10m_admin_0_countries") # Read in (unprojected) map data
+mymap.pro=spTransform(mymap.unpro, WGS84) # Reproject the map
+
+mymap.unpro_lakes=readOGR(dsn='../data/NaturalEarthData/ne_10m_lakes',layer="ne_10m_lakes") # Read in (unprojected) map data
+mymap.pro_lakes=spTransform(mymap.unpro_lakes, WGS84) # Reproject the map
+
+fun <- function() {
+  plot(mymap.pro,add=TRUE)
+  plot(mymap.pro_lakes,add=TRUE)
+}
+```
+
+## Untar and unzip the SARAH files from ftp server
+
+```{r create nc files}
+#untar all the files
+#system("ls *.tar | xargs -i tar xf {}")
+
+#gz.files<-list.files("/nobackup/users/dirksen/SARAH/",pattern=".nc.gz",full.names = TRUE)
+
+#for (i in 1:length(gz.files)){
+#  gz<-gz.files[i]
+#gunzip(gz)
+#}
+```
+
+## Create rasters from NetCDF files
+
+function: generate_raster_based_on_netcdf
+
+```{r nc to raster}
+nc.files<-list.files("/nobackup/users/dirksen/SARAH/",pattern=".nc",full.names = TRUE)
+save_dir<-"../data/SARAH_raster/raster_datum.grd"
+start_time<-as.POSIXct("1983-01-01 00:00:00") 
+
+results<-lapply(nc.files[1:5],
+                generate_raster_based_on_netcdf,
+                save_dir = save_dir,
+                start_time = start_time,
+                varname = "SIS")
+
+```
+
+## Climatologies based on SARAH
+
+function: calculate_time_average_raster
+```{r}
+raster.path<-"../data/SARAH_raster/"
+time.format<-"raster_%Y-%m-%d.grd"
+time.period<-"month"
+ext<-extent(-11.5,15.1,45.8,61.1) #Northwestern europe
+
+new_raster<-calculate_time_average_raster(raster.path=raster.path,
+                              ext=ext,
+                              time.format=time.format,
+                              time.period=time.period)
+saveRDS(new_raster,"../results/time_averaged_raster.rds")
+```
+
+
+```{r pca}
+grdfiles<- list.files("/nobackup/users/dirksen/data/SARAH_raster/",pattern=".grd")
+sarah.datums<-as.Date(grdfiles,format = time.format)
+sarah.months<-months(sarah.datums)
+
+
+sarah.months.unique<-unique(sarah.months)
+I<-which(sarah.months==sarah.months.unique[1])
+
+Jan.files<-list.files("/nobackup/users/dirksen/data/SARAH_raster/",pattern=".grd",full.names = TRUE)[I]
+Jan.st<-stack(Jan.files)
+
+Jan.pca<-rasterPCA
+
+```
+
+## Visualization
+
+```{r figures}
+month.mean<-readRDS("../results/time_averaged_raster.rds")
+
+kleur.breaks<-seq(18,245,by=0.5)
+kleur.cols<-colorRampPalette(c("green","yellow","orange"))(length(kleur.breaks-1))
+plot.new()
+par(mar=c(0,0,0,0), oma=c(0,0,0,0))
+
+#png(filename="../fig/month_mean_SARAH.png", width = 3200, height = 2200, units = "px",res=300)
+
+plot(month.mean,addfun=fun,col=kleur.cols,
+     #ext=extent(month.mean),
+     legend.args=list(text='W/m2', side=3, cex=0.5
+     ))
+
+#dev.off()
+```
+## SNOW cover
+\url(link)[http://nsidc.org/data/g02156]
+
+* the 1 km dataset is available from 2014 until now
+* the 4 km dataset is available from 2004 until now
+* the 24 km dataset is available from 1997 until now
+
+format: zipped asci files (without meta data) or GeoTIFF (with projection and so, only 1km and 4km)
+name: ims%Y%yd_4km_v1.2.asc.gz
+
+```{r}
+library(RCurl)
+library(lubridate)
+library(dplyr)
+url<-"ftp://sidads.colorado.edu/pub/DATASETS/NOAA/G02156/GIS/1km/"
+
+name.format<-"imsYYYYDDD_1km_GIS_v1.3.tif.gz"
+
+start<-as.Date("2014-01-01")
+yday(start)<-336
+start<-as.POSIXct(start)
+
+stop<-as.Date("2014-01-01")
+yday(stop)<-365
+end<-as.POSIXct(stop)
+
+time.vector<-seq(start,end,by="day")
+
+time.vector<-format(time.vector,format="%Y%j")
+
+first.folder<-format(start,format="%Y")
+first.file<-gsub("YYYYDDD",time.vector[1],name.format)
+
+#now transfered using filezilla, somehow rstudio doesnt download this data?
+library(httr)
+url.file<-paste0(url,first.folder,"/",first.file)
+output.file<-"test.tif.gz"
+
+out<-GET(url.file)
+
+#files<-getURL(paste0(url,first.folder,"/",first.file))
+
+#url<-"ftp://sidads.colorado.edu/pub/DATASETS/NOAA/G02156/" #link to the asci files
+```
