@@ -1,4 +1,5 @@
 library(data.table)
+library(raster)
 main_dir<-"/nobackup/users/dirksen/data/radiation_europe/"
 
 #Ensembles data and metadata 
@@ -25,5 +26,11 @@ synops<-subset(synops,select=which(names(synops)!="|"))
 
 devtools::use_data(synops,overwrite = TRUE)
 
+#solar radiation data
+sarah.example<-list.files("/nobackup/users/dirksen/data/SARAH_raster/",pattern=".grd",full.names = TRUE)[5000]
+sarah.grid<-stack(sarah.example)
+names(sarah.grid)<-"Irr"
+
+devtools::use_data(sarah.grid,overwrite = TRUE)
 
 

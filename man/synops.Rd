@@ -19,4 +19,7 @@ synops
 \description{
 Radiation data from the synoptic stations
 }
+\references{
+\url{https://www.ecad.eu/}
+}
 \keyword{datasets}

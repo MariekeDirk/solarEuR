@@ -1,1 +1,3 @@
 exportPattern("^[[:alpha:]]+")
+importFrom("raster","crop","raster","extent","stack","stackApply","writeRaster")
+importFrom("ncdf4","nc_open","ncvar_get","nc_close")

@@ -1,6 +1,6 @@
 #' Metadata from the ensembles dataset
 #' 
-#' 
+#' @references \url{https://www.ecad.eu/}
 #' 
 #' @format A data frame with 102 rows and 8 variables:
 #' \describe{
@@ -17,7 +17,7 @@
 
 #' Metadata from the ensembles dataset
 #' 
-#' 
+#' @references \url{https://www.ecad.eu/}
 #' 
 #' @format A data frame with 598 rows and 8 variables:
 #' \describe{
@@ -34,7 +34,7 @@
 
 #' Radiationdata from the ECA database
 #' 
-#' 
+#' @references \url{https://www.ecad.eu/}
 #' 
 #' @format A data frame with 900390 rows and 6 variables:
 #' \describe{
@@ -49,7 +49,7 @@
 
 #' Radiation data from the synoptic stations
 #' 
-#' 
+#' @references \url{https://www.ecad.eu/}
 #' 
 #' @format A data frame with 353119 rows and 6 variables:
 #' \describe{
@@ -61,3 +61,15 @@
 #'  \item{SOURCE}{same as STATION because there is no blending for radiation.}
 #' }
 "synops"
+
+
+#'SARAH solar irradiance dataset
+#'
+#'
+#'An example of the gridded SARAH dataset for 1997-02-02. The data is rasterized from the original netcdf files. 
+#'The data projection is WGS84. 
+#'
+#'@references \url{https://wui.cmsaf.eu/safira/action/viewDoiDetails?acronym=SARAH_V002}
+#'
+#'@slot Irr Solar irradiance in W/m2
+"sarah.grid"

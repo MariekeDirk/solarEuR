@@ -12,7 +12,8 @@
 #'
 
 generate_raster_based_on_netcdf = function(ncdf_path,save_dir,start_time=as.POSIXct("1983-01-01 00:00:00"),varname) {
-  
+requireNamespace("raster")
+requireNamespace("ncdf4")  
   # First check if there is a ncdf4 file
   if (!inherits(ncdf_path, 'ncdf4')) {
     

@@ -13,6 +13,7 @@
 #'
 
 calculate_time_average_raster<-function(raster.path,ext=extent(-11.5,15.1,45.8,61.1),time.format,time.period){
+requireNamespace("raster")
   
   if(time.period!="month"){
     message("sorry, no function written for this time period...\n")
@@ -42,7 +43,7 @@ calculate_time_average_raster<-function(raster.path,ext=extent(-11.5,15.1,45.8,6
   
   if(time.period=="whole period"){
     message("calculating an average for the whole period \n")
-    mean.wholeperiod<-stackApply(st.crop,1,fun=mean)
+    mean.wholeperiod<-stackApply(st,1,fun=mean)
     
     message("done")
     return(mean.wholeperiod)  
