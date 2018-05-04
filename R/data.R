@@ -78,9 +78,17 @@
 #'library(raster)
 #'data(countries)
 #'data(sarah.grid)
+#'data(ensembles_meta)
+#'WGS84<-CRS("+init=epsg:4326")
+#'
+#'obs.sweden<-ensembles_meta[which(ensembles_meta$`COUNTRY NAME`=="SWEDEN"),]
+#'obs.sweden<-data.frame(obs.sweden)
+#'coordinates(obs.sweden)<-~LON+LAT
+#'proj4string(obs.sweden)<-WGS84
 #'
 #'fun <- function() {
 #'plot(countries,add=TRUE)
+#'plot(obs.sweden,add=TRUE)
 #'}
 #'
 #'plot(sarah.grid,addfun=fun)
@@ -88,7 +96,11 @@
 #'sweden<-subset(countries,GEOUNIT %in% c("Sweden"))
 #'sarah.sub<-crop(sarah.grid,sweden)
 #'sarah.sub<-mask(sarah.sub,sweden)
-#'plot(sarah.sub,addfun=fun)
+#'
+#'
+#'
+#'plot(sarah.sub,addfun=fun) #the sarah dataset misses the northern part of Sweden, not shown in the plot
+#'
 #'
 #'@slot Irr Solar irradiance in W/m2
 "sarah.grid"
