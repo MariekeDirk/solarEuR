@@ -10,7 +10,10 @@ sarah.grid
 }
 \description{
 An example of the gridded SARAH dataset for 1997-02-02. The data is rasterized from the original netcdf files. 
-The data projection is WGS84.
+The data projection is WGS84. The extent of the data is +/-65 latitude and +/-65 longitude.
+}
+\details{
+The countries dataset can be used to subset SARAH for a specific region within these bounds.
 }
 \section{Slots}{
 
@@ -18,6 +21,23 @@ The data projection is WGS84.
 \item{\code{Irr}}{Solar irradiance in W/m2}
 }}
 
+\examples{
+library(raster)
+data(countries)
+data(sarah.grid)
+
+fun <- function() {
+plot(countries,add=TRUE)
+}
+
+plot(sarah.grid,addfun=fun)
+
+sweden<-subset(countries,GEOUNIT \%in\% c("Sweden"))
+sarah.sub<-crop(sarah.grid,sweden)
+sarah.sub<-mask(sarah.sub,sweden)
+plot(sarah.sub,addfun=fun)
+
+}
 \references{
 \url{https://wui.cmsaf.eu/safira/action/viewDoiDetails?acronym=SARAH_V002}
 }

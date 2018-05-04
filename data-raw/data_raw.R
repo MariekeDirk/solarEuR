@@ -33,4 +33,9 @@ names(sarah.grid)<-"Irr"
 
 devtools::use_data(sarah.grid,overwrite = TRUE)
 
+#natural earth dataset
+WGS84<-CRS("+init=epsg:4326")
+mymap.unpro=readOGR(dsn='/nobackup/users/dirksen/data/NaturalEarthData/ne_10m_admin_0_countries',layer="ne_10m_admin_0_countries") # Read in (unprojected) map data
+countries=spTransform(mymap.unpro, WGS84) # Reproject the map
 
+devtools::use_data(countries,overwrite = TRUE)

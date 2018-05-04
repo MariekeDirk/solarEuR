@@ -67,9 +67,44 @@
 #'
 #'
 #'An example of the gridded SARAH dataset for 1997-02-02. The data is rasterized from the original netcdf files. 
-#'The data projection is WGS84. 
+#'The data projection is WGS84. The extent of the data is +/-65 latitude and +/-65 longitude.  
+#'
+#'The countries dataset can be used to subset SARAH for a specific region within these bounds. 
 #'
 #'@references \url{https://wui.cmsaf.eu/safira/action/viewDoiDetails?acronym=SARAH_V002}
 #'
+#'
+#'@examples
+#'library(raster)
+#'data(countries)
+#'data(sarah.grid)
+#'
+#'fun <- function() {
+#'plot(countries,add=TRUE)
+#'}
+#'
+#'plot(sarah.grid,addfun=fun)
+#'
+#'sweden<-subset(countries,GEOUNIT %in% c("Sweden"))
+#'sarah.sub<-crop(sarah.grid,sweden)
+#'sarah.sub<-mask(sarah.sub,sweden)
+#'plot(sarah.sub,addfun=fun)
+#'
 #'@slot Irr Solar irradiance in W/m2
 "sarah.grid"
+
+#'Natural earth country data
+#'
+#'This dataset contains polygons of all the countries at a resolution of 10m. 
+#'
+#'@references \url{http://www.naturalearthdata.com/}
+#'
+#'@examples
+#'data(countries)
+#'names(countries)
+#'
+#'two.countries<-subset(countries,GEOUNIT %in% c("Sweden","Denmark")) #Get the polygon of Sweden and Denmark
+#'plot(two.countries)
+#'
+#'eu.countries<-subset(countries,CONTINENT %in% "Europe") #get the full european continent 
+"countries"
