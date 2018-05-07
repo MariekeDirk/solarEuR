@@ -101,6 +101,11 @@
 #'
 #'plot(sarah.sub,addfun=fun) #the sarah dataset misses the northern part of Sweden, not shown in the plot
 #'
+#'#Example with the E-OBS mask: cropping sarah with the land/sea mask
+#'data(mask2_topo_1km)
+#'sarah_sea_mask<-crop(sarah.grid,mask2_topo_1km)
+#'plot(sarah_sea_mask,addfun=fun)
+#'
 #'
 #'@slot Irr Solar irradiance in W/m2
 "sarah.grid"
@@ -120,3 +125,55 @@
 #'
 #'eu.countries<-subset(countries,CONTINENT %in% "Europe") #get the full european continent 
 "countries"
+
+#'Land sea mask and topographic parameter
+#'
+#'GTOPO30 DEM for land/sea masking and topographic
+#'parameters
+#'
+#'@slot tpi ?
+#'@slot slope slope with values between 0 and 1
+#'@slot aspect ?
+#'@slot Pvec ?
+#'@slot Qvec ?
+#'@slot alt altitude averaged over 1km
+#'@slot dist2coast distance to the nearest ocean/sea
+#'
+"mask_topo_1km"
+
+#'Newest Land sea mask and topographic parameter
+#'
+#'GMTED2010 DEM for land/sea masking and topographic
+#'parameters
+#'
+#'@slot tpi ?
+#'@slot slope slope with values between 0 and 1
+#'@slot aspect ?
+#'@slot Pvec ?
+#'@slot Qvec ?
+#'@slot alt altitude averaged over 1km
+#'@slot dist2coast distance to the nearest ocean/sea
+#'
+"mask2_topo_1km"
+
+#' Global Horizontal Radiation
+#' 
+#' Dataset from nasa: \url{https://eosweb.larc.nasa.gov/cgi-bin/sse/global.cgi}
+#' 
+#' The monthly average amount of the total solar radiation incident on a horizontal 
+#' surface at the surface of the earth for a given month, averaged for that month over 
+#' the 22-year period (Jul 1983 - Jun 2005). Each monthly averaged value is evaluated 
+#' as the numerical average of 3-hourly values for the given month. 
+#' 
+#' Unit: kWh/m2/day 
+#' Based on: Satellite data
+#' 
+#' @examples 
+#' data("global_radiation")
+#' data("mask2_topo_1km")
+#' 
+#' radiation_europe<-crop(global_radiation,mask2_topo_1km)
+#' radiation_europe<-resample(radiation_europe,mask2_topo_1km[[1]],"bilinear")
+#' radiation_europe<-mask(radiation_europe,mask2_topo_1km[[1]])
+#' spplot(radiation_europe)
+"global_radiation"

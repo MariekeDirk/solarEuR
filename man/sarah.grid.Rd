@@ -46,7 +46,12 @@ sarah.sub<-mask(sarah.sub,sweden)
 
 
 
-plot(sarah.sub,addfun=fun)
+plot(sarah.sub,addfun=fun) #the sarah dataset misses the northern part of Sweden, not shown in the plot
+
+#Example with the E-OBS mask: cropping sarah with the land/sea mask
+data(mask2_topo_1km)
+sarah_sea_mask<-crop(sarah.grid,mask2_topo_1km)
+plot(sarah_sea_mask,addfun=fun)
 
 
 }

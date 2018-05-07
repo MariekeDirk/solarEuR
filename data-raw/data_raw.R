@@ -39,3 +39,19 @@ mymap.unpro=readOGR(dsn='/nobackup/users/dirksen/data/NaturalEarthData/ne_10m_ad
 countries=spTransform(mymap.unpro, WGS84) # Reproject the map
 
 devtools::use_data(countries,overwrite = TRUE)
+
+#DEM and land/sea mask
+mask_topo_1km<-stack("/nobackup/users/dirksen/data/radiation_europe/DEM/gtopo30_gis_1km.grd")
+devtools::use_data(mask_topo_1km,overwrite = TRUE)
+
+#grid used for the current E-OBS
+mask2_topo_1km<-stack("/nobackup/users/dirksen/data/radiation_europe/DEM/gmted2010_gis_1km.grd")
+devtools::use_data(mask2_topo_1km,overwrite = TRUE)
+
+#NASA global radiation
+global_radiation<-fread("https://eosweb.larc.nasa.gov/sse/global/text/global_radiation")
+coordinates(global_radiation)<-~Lon+Lat
+crs(global_radiation)<-WGS84
+gridded(global_radiation)<-TRUE
+global_radiation<-stack(global_radiation)
+devtools::use_data(global_radiation,overwrite=TRUE)
